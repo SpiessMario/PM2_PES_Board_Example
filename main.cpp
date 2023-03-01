@@ -20,7 +20,7 @@ int main()
     user_button.fall(&user_button_pressed_fcn);
 
     // while loop gets executed every main_task_period_ms milliseconds (simple aproach to repeatedly execute main)
-    const int main_task_period_ms = 50; // define main task period time in ms e.g. 50 ms -> main task runs 20 times per second
+    const int main_task_period_ms = 500; // define main task period time in ms e.g. 50 ms -> main task runs 20 times per second
     Timer main_task_timer;              // create Timer object which we use to run the main task every main_task_period_ms
 
 
@@ -39,6 +39,7 @@ int main()
     // Sharp GP2Y0A41SK0F, 4-40 cm IR Sensor
     float ir_distance_mV = 0.0f; // define variable to store measurement
     //??? // create AnalogIn object to read in infrared distance sensor, 0...3.3V are mapped to 0...1
+    AnalogIn ir_distance_sensor(PC_2);
 
 
     main_task_timer.start();
@@ -54,6 +55,7 @@ int main()
 
                 // read analog input
                 //ir_distance_mV = ???;
+                ir_distance_mV = ir_distance_sensor.read() * 3300;
 
             }
 
@@ -79,7 +81,7 @@ int main()
 
         // read timer and make the main thread sleep for the remaining time span (non blocking)
         int main_task_elapsed_time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(main_task_timer.elapsed_time()).count();
-        printf("Elapsed time (ms): %d\r\n", main_task_elapsed_time_ms); // Dängeli shut up!
+        //printf("Elapsed time (ms): %d\r\n", main_task_elapsed_time_ms); // Dängeli shut up!
         thread_sleep_for(main_task_period_ms - main_task_elapsed_time_ms);
     }
 }
